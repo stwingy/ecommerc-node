@@ -96,24 +96,27 @@ class usersRepository {
 	}
 }
 
-const test = async () => {
-	const repo = new usersRepository('users.json');
+//EXPORT AN INSTANCE OF TH CLASS
+module.exports = new usersRepository('users.json');
 
-	//await repo.create({ email: 'te1lytubby@test.com', password: 'pass=bass' });
+// const test = async () => {
+// 	const repo = new usersRepository('users.json');
 
-	//const users = await repo.getAll();
+//await repo.create({ email: 'te1lytubby@test.com', password: 'pass=bass' });
 
-	//console.log(users);
+//const users = await repo.getAll();
 
-	//const user = await repo.getOne('fba425e9');
+//console.log(users);
 
-	//console.log(user);
+//const user = await repo.getOne('fba425e9');
 
-	//await repo.delete('1b418cf2');
+//console.log(user);
 
-	//await repo.update('2ebe0aa5', { email: 'john@john.com', loggedIn: 'today' });
-	const user = await repo.getOneBy({ email: 'te1@test.com' });
-	console.log(user);
-};
+//await repo.delete('1b418cf2');
+
+//await repo.update('2ebe0aa5', { email: 'john@john.com', loggedIn: 'today' });
+// 	const user = await repo.getOneBy({ email: 'te1@test.com' });
+// 	console.log(user);
+// };
 
 test();
