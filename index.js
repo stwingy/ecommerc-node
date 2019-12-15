@@ -1,6 +1,7 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+//const bodyParser = require('body-parser');
 const app = express();
+const usersRepo = require('./repositorys/users');
 // app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded());
 app.get('/', (req, res) => {
@@ -17,7 +18,15 @@ app.get('/', (req, res) => {
 	`);
 });
 
-app.post('/', (req, res) => {
+app.post('/', async (req, res) => {
+	const { email, password, passwordConfirmation } = req.body;
+	const existingUser = await usersRepo.getOneBy({ email });
+	if (existingUser) {
+		return res.send('Email already in use');
+	}
+	if (password !== passwordConfirmation) {
+		res.send('Passwords must match');
+	}
 	res.send('Suucess');
 });
 app.listen(3000, () => console.log('LISTENING'));
