@@ -1,4 +1,5 @@
 const express = require('express');
+const { check } = require('express-validator');
 const usersRepo = require('../../repositorys/users');
 const router = express.Router();
 const signupTemplate = require('../../views/admin/auth/signup');
@@ -7,19 +8,23 @@ router.get('/signup', (req, res) => {
 	res.send(signupTemplate({ req }));
 });
 
-router.post('/signup', async (req, res) => {
-	const { email, password, passwordConfirmation } = req.body;
-	const existingUser = await usersRepo.getOneBy({ email });
-	if (existingUser) {
-		return res.send('Email already in use');
+router.post(
+	'/signup',
+	[ check('email').isEmail(), check('password'), check('passwordConfirmation') ],
+	async (req, res) => {
+		const { email, password, passwordConfirmation } = req.body;
+		const existingUser = await usersRepo.getOneBy({ email });
+		if (existingUser) {
+			return res.send('Email already in use');
+		}
+		if (password !== passwordConfirmation) {
+			res.send('Passwords must match');
+		}
+		const user = await usersRepo.create({ email, password }); //id returned for cookie
+		req.session.userId = user.id; //req.session is a cookie-sessio object -can add anything to it
+		res.send('Suucess');
 	}
-	if (password !== passwordConfirmation) {
-		res.send('Passwords must match');
-	}
-	const user = await usersRepo.create({ email, password }); //id returned for cookie
-	req.session.userId = user.id; //req.session is a cookie-sessio object -can add anything to it
-	res.send('Suucess');
-});
+);
 router.get('/signout', (req, res) => {
 	req.session = null;
 	res.send('You are logged out');
