@@ -49,7 +49,12 @@ class usersRepository {
 		await this.writeAll(records);
 		return record;
 	}
-
+	async comparePasswords(saved, supplied) {
+		const result = saved.split('.');
+		const [ hashed, salt ] = result;
+		const hashedSuppliedBuf = await scrypt(supplied, salt, 64);
+		return hashed === hashedSuppliedBuf.toString('hex');
+	}
 	async writeAll(records) {
 		await fs.promises.writeFile(this.fileName, JSON.stringify(records, null, 2)); //{ encoding: 'utf8' } could be added but is default,    null,2 json on seperate lines
 	}
