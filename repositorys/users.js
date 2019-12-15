@@ -1,12 +1,8 @@
 const fs = require('fs');
-<<<<<<< HEAD
 const crypto = require('crypto');
-||||||| 1e5a882
-=======
+const util = require('util');
 
-const crypto = require('crypto');
-
->>>>>>> 2f78230a0451455c219fc5c4564320eeaab0e0d8
+const scrypt = util.promisify(crypto.scrypt);
 class usersRepository {
 	constructor(fileName) {
 		if (!fileName) throw new Error('File name required');
@@ -41,50 +37,17 @@ class usersRepository {
 	}
 
 	async create(attrs) {
-<<<<<<< HEAD
 		attrs.id = this.randomId();
-||||||| 1e5a882
-=======
-		attrs.id = this.randomId();
+		const salt = crypto.randomBytes(8).toString('hex');
+		//hash the password +salt
+		const buf = await scrypt(attrs.password, salt, 64);
 
->>>>>>> 2f78230a0451455c219fc5c4564320eeaab0e0d8
 		const records = await this.getAll();
-
-		records.push(attrs);
-<<<<<<< HEAD
-		await this.writeAll(records);
-	}
-	async writeAll(records) {
-		await fs.promises.writeFile(this.fileName, JSON.stringify(records, null, 2)); //{ encoding: 'utf8' } could be added but is default,    null,2 json on seperate lines
-	}
-	randomId() {
-		return crypto.randomBytes(4).toString('hex');
-	}
-	async getOne(id) {
-		const records = await this.getAll();
-		return records.find((record) => record.id === id);
-	}
-	async delete(id) {
-		const records = await this.getAll();
-		const filtered = records.filter((record) => record.id !== id);
-		await this.writeAll(filtered);
-	}
-	async update(id, attrs) {
-		const records = await this.getAll();
-		const record = records.find((record) => record.id === id);
-		console.log(record);
-		if (!record) {
-			throw new Error(`Unable to find record id number ${id}`);
-		}
-		Object.assign(record, attrs);
+		const record = { ...attrs, password: `${buf.toString('hex')}.${salt}` };
+		records.push(record);
 
 		await this.writeAll(records);
-||||||| 1e5a882
-		await fs.promises.writeFile(this.fileName, JSON.stringify(records)); //{ encoding: 'utf8' } could be added but is default
-=======
-
-		await this.writeAll(records);
-		return attrs;
+		return record;
 	}
 
 	async writeAll(records) {
@@ -135,32 +98,8 @@ class usersRepository {
 			}
 			if (found) return record;
 		}
->>>>>>> 2f78230a0451455c219fc5c4564320eeaab0e0d8
 	}
 }
-<<<<<<< HEAD
-const test = async () => {
-	const repo = new usersRepository('users.json');
-	//await repo.create({ email: 'te1@test.com', password: 'pass' });
-	//const users = await repo.getAll();
-	//console.log(users);
-	//const user = await repo.getOne('fba425e9');
-	//console.log(user);
-	//await repo.delete('1b418cf2');
-	await repo.update('75ce68fc', { email: 'john@john.com', loggedIn: 'today' });
-};
-
-test();
-||||||| 1e5a882
-const test = async () => {
-	const repo = new usersRepository('users.json');
-	await repo.create({ email: 'test@test.com', password: 'password' });
-	const users = await repo.getAll();
-	console.log(users);
-};
-
-test();
-=======
 
 //EXPORT AN INSTANCE OF TH CLASS
 module.exports = new usersRepository('users.json');
@@ -186,4 +125,3 @@ module.exports = new usersRepository('users.json');
 // };
 
 //test();
->>>>>>> 2f78230a0451455c219fc5c4564320eeaab0e0d8
