@@ -28,5 +28,30 @@
     "email": "te@test.com",
     "password": "87a46db6c9bb24a1652c82bb1fde95ebee92e09e30fd4ba8495e14039c1e0d0e9419855ce2c98549ac1937a5330921fe0694eb97e8bf901fb8e0037c04e3ad06.e708d8bf587f03a8",
     "id": "c289d001"
+  },
+  {
+    "email": "crap@a.zz",
+    "password": "4d15e972477cbb5cbf43ea10e053bc30dc2c772553e3ebfe80ecdac6e4c49605b45b52ac24582fad6d5e84e7fc213b4a56442d4a24067e4463858afc2409a9fe.976bdcb751034da4",
+    "id": "a6a406f0"
+  },
+  {
+    "email": "john@scallywag.org.uk",
+    "password": "1512d6d15c3a719ed5060c77475e512b1104f4bd8fed5ad189d43cb7033dac099ea39239fe1eaab4d3c0ca0a508781af74e4f4c643ef772804729e614d84a4f9.0c740819597f8c4a",
+    "id": "fb71255b"
+  },
+  {
+    "email": "john@scallywag.org.uk",
+    "password": "cd011dd9b3da42161efcc9928d0957a55ab68b33bebbd2793f2f35a40ae4deac7c25691558803f5516b53bd5fd3fd83ac50267c2977c17614dfee9894a0a15bf.5ece3bd6f819b0ee",
+    "id": "eb74ebe1"
+  },
+  {
+    "email": "john@scallywag.org.uk",
+    "password": "260dc3b34714d53ffe9918f084ce8b21d4f32fcaaca26dcbf637fc74315e603b7ec9ed8225b7ad8b0149b2b107c437e4ac9397a1f802ed5f155dc09e7cb2f001.0dbf0c29a26c2020",
+    "id": "e04c68ac"
+  },
+  {
+    "email": "jtt@gol.com",
+    "password": "0b1b3550cda7ece9882e8af40e6e8aba6ffaed97176e6b520efff54a3d8bfd60bf55a9c950ccd88a95b1e06dc5d3bc2f1f7736459213ad26946b6c5c0aedbaef.7219ad8e0a26f9ec",
+    "id": "167d1c9d"
   }
 ]

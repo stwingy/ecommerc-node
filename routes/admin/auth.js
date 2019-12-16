@@ -1,5 +1,5 @@
 const express = require('express');
-const { check } = require('express-validator');
+const { check, validationResult } = require('express-validator');
 const usersRepo = require('../../repositorys/users');
 const router = express.Router();
 const signupTemplate = require('../../views/admin/auth/signup');
@@ -10,16 +10,30 @@ router.get('/signup', (req, res) => {
 
 router.post(
 	'/signup',
-	[ check('email').isEmail(), check('password'), check('passwordConfirmation') ],
+	[
+		check('email').trim().normalizeEmail().isEmail().custom(async (email) => {
+			const existingUser = await usersRepo.getOneBy({ email });
+
+			if (existingUser) {
+				throw new Error('Email in use');
+			}
+		}),
+		check('password').trim().isLength({ min: 4, max: 20 }).withMessage('Between 4 and 20 characters'),
+		check('passwordConfirmation')
+			.trim()
+			.isLength({ min: 4, max: 20 })
+			.withMessage('Between 4 and 20 characters')
+			.custom((pc, { req }) => {
+				if (pc !== req.body.password) {
+					throw new Error('Passwords must match');
+				}
+			})
+	],
 	async (req, res) => {
+		const errors = validationResult(req);
+		console.log(errors);
 		const { email, password, passwordConfirmation } = req.body;
-		const existingUser = await usersRepo.getOneBy({ email });
-		if (existingUser) {
-			return res.send('Email already in use');
-		}
-		if (password !== passwordConfirmation) {
-			res.send('Passwords must match');
-		}
+
 		const user = await usersRepo.create({ email, password }); //id returned for cookie
 		req.session.userId = user.id; //req.session is a cookie-sessio object -can add anything to it
 		res.send('Suucess');
