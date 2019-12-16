@@ -1,7 +1,8 @@
 const fs = require('fs');
-
 const crypto = require('crypto');
+const util = require('util');
 
+const scrypt = util.promisify(crypto.scrypt);
 class usersRepository {
 	constructor(fileName) {
 		if (!fileName) throw new Error('File name required');
@@ -37,15 +38,23 @@ class usersRepository {
 
 	async create(attrs) {
 		attrs.id = this.randomId();
+		const salt = crypto.randomBytes(8).toString('hex');
+		//hash the password +salt
+		const buf = await scrypt(attrs.password, salt, 64);
 
 		const records = await this.getAll();
-
-		records.push(attrs);
+		const record = { ...attrs, password: `${buf.toString('hex')}.${salt}` };
+		records.push(record);
 
 		await this.writeAll(records);
-		return attrs;
+		return record;
 	}
-
+	async comparePasswords(saved, supplied) {
+		const result = saved.split('.');
+		const [ hashed, salt ] = result;
+		const hashedSuppliedBuf = await scrypt(supplied, salt, 64);
+		return hashed === hashedSuppliedBuf.toString('hex');
+	}
 	async writeAll(records) {
 		await fs.promises.writeFile(this.fileName, JSON.stringify(records, null, 2)); //{ encoding: 'utf8' } could be added but is default,    null,2 json on seperate lines
 	}
