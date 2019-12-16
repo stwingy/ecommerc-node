@@ -1,16 +1,21 @@
 const layout = require('../layout');
-module.exports = ({ req }) => {
+const { getError } = require('../../helpers');
+
+module.exports = ({ req, errors }) => {
 	return layout({
 		content: `
-        id is ${req.session.userId}
-        <div>
-            <form method ="POST">
-            <input name = "email" type = "email" placeholder="Enter your email" />
-            <input name = "password" type = "password" placeholder="Enter your password" />
-            <input name = "passwordConfirmation" type = "password" placeholder="Confirm Password" />
-            <button type = "submit">Submit</button>
-            </form>
-        </div>
-        `
+    <div>
+      Your id is: ${req.session.userId}
+      <form method="POST">
+        <input name="email" placeholder="email" />
+        ${getError(errors, 'email')}
+        <input name="password" placeholder="password" />
+        ${getError(errors, 'password')}
+        <input name="passwordConfirmation" placeholder="password confirmation" />
+        ${getError(errors, 'passwordConfirmation')}
+        <button>Sign Up</button>
+      </form>
+    </div>
+  `
 	});
 };
