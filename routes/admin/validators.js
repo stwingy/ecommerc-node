@@ -2,6 +2,8 @@ const { check } = require('express-validator');
 const usersRepo = require('../../repositorys/users');
 
 module.exports = {
+	requireTitle: check('title').trim().isLength({ min: 4, max: 30 }).withMessage('Length betwwen 4 & 30 characters'),
+	requirePrice: check('price').trim().toFloat().isFloat({ min: 1 }).withMessage('must be a number above 1'),
 	requireEmail: check('email')
 		.trim()
 		.normalizeEmail()
